@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
 from app.decorators import group_required
-from .groups import VISITOR_GROUP, ADMIN_GROUP
+from .groups import USER_GROUP, ADMIN_GROUP
 
 from uuid import uuid4
 
@@ -30,7 +30,7 @@ def create_visitor(request):
                 )
                 visitor.user = user
                 visitor.save(update_fields=['user'])
-                user.groups.add(Group.objects.get(name=VISITOR_GROUP))
+                user.groups.add(Group.objects.get(name=USER_GROUP))
                 
             return redirect('visitors')
     else:
@@ -42,7 +42,7 @@ def create_visitor(request):
         
     return render(request, 'create-visitor.html', response)
 
-@group_required(VISITOR_GROUP)
+@group_required(USER_GROUP)
 def change_password(request):
     if request.method == "POST":
         form = ChangePasswordForm(request.POST, user=request.user)
