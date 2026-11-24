@@ -5,6 +5,8 @@ from app.forms.authentication_form import CpfAuthenticationForm
 from . import views
 
 urlpatterns = [
+    path("", views.dashboard, name="home"),
+    path("dashboard/", views.dashboard, name="dashboard_cliente"),
     path("login/", LoginView.as_view(
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,

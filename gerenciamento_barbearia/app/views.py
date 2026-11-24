@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import get_user_model
@@ -10,6 +11,12 @@ from app.decorators import group_required
 from .groups import USER_GROUP, ADMIN_GROUP
 
 from uuid import uuid4
+
+
+@login_required
+def dashboard(request):
+    return render(request, "dashboard.html")
+
 
 @group_required(ADMIN_GROUP)
 def create_visitor(request):

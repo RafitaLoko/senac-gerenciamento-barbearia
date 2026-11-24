@@ -26,3 +26,31 @@ class UserTypesTests(TestCase):
 
         self.assertTrue(user.groups.filter(name=USER_GROUP).exists())
         self.assertTrue(admin.groups.filter(name=ADMIN_GROUP).exists())
+
+
+class DashboardTests(TestCase):
+    def test_home_redirects_anonymous_users_to_login(self):
+        response = self.client.get("/", follow=False)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/login/?next=/")
+
+    def test_login_page_uses_base_template(self):
+        response = self.client.get("/login/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<h1>Entrar</h1>")
+        self.assertContains(response, 'href="/static/visitors/css/style.css"')
+
+    def test_authenticated_user_can_open_dashboard(self):
+        user = get_user_model().objects.create_user(
+            username="cliente",
+            password="senhaSegura123",
+        )
+        self.client.force_login(user)
+
+        response = self.client.get("/dashboard/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Bem-vindo, cliente!")
+        self.assertContains(response, 'href="/static/visitors/css/style.css"')
