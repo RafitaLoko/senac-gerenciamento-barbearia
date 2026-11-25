@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+Confirmação
+{% endblock %}
+{% block content %}
+<section class="panel success">
+    <div class="check">✓</div>
+    <h1>Agendamento registrado!</h1>
+    <p>Confira os dados da sua reserva.</p>
+    <div class="summary">
+        <p><b>Serviço:</b> {{ appointment.service.name }}</p>
+        <p><b>Data:</b> {{ appointment.date|date:"d/m/Y" }}</p>
+        <p><b>Horário:</b> {{ appointment.time|time:"H:i" }}</p>
+        <p><b>Valor:</b> R$ {{ appointment.service.price }}</p>
+        <p><b>Status:</b> {{ appointment.status }}</p>
+    </div>
+    <a class="button" href="{% url 'meus_agendamentos' %}">Ver meus agendamentos</a>
+</section>{% endblock %}
