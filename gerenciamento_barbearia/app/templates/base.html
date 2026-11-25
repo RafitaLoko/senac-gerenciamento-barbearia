@@ -4,7 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Barber King{% endblock %}</title>
+  <title>
+    {% block title %}
+    Barber King
+    {% endblock %}
+  </title>
   <link rel="stylesheet" href="{% static 'visitors/css/style.css' %}">
 </head>
 <body>
@@ -20,9 +24,20 @@
   {% endif %}
 </header>
 <main class="container">
-  {% for message in messages %}<div class="message">{{ message }}</div>{% endfor %}
-  {% block content %}{% endblock %}
+  {% for message in messages %}
+  <div class="message">
+    {{ message }}
+  </div>
+  
+  {% endfor %}
+  {% block content %}
+  
+  {% endblock %}
 </main>
-<footer>BARBER KING · Estilo em boas mãos</footer>
+
+<footer>
+  BARBER KING · Estilo em boas mãos
+</footer>
+
 </body>
 </html>
