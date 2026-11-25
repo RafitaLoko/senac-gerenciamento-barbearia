@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>      
+    {% extends 'base.html' %}
+
+    {% block content %}
+
+    <h1>Painel Admin</h1>
+    <p>Total de clientes: {{ total_clientes }}</p>
+
+    <table>
+        {% for c in clientes %}
+        <tr><td>{{ c.nome }}</td><td>{{ c.telefone }}</td></tr>
+        {% endfor %}
+    </table>
+    {% endblock %}
+    
+</body>
+</html>

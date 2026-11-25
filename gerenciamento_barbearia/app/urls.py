@@ -5,9 +5,12 @@ from app.forms.authentication_form import CpfAuthenticationForm
 from . import views
 
 urlpatterns = [
+    path("", views.dashboard, name="home"),
+    path("dashboard/", views.dashboard, name="dashboard_cliente"),
     path("login/", LoginView.as_view(
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,
     ), name="login"),
-    path("logout/", LogoutView.as_view(), name="logout")
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("admin-painel/", views.admin_painel, name="admin_painel"),
 ]
