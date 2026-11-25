@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     path("", views.dashboard, name="home"),
     path("dashboard/", views.dashboard, name="dashboard_cliente"),
-    path("login/", LoginView.as_view(
+    path("login/", views.CustomLoginView.as_view(
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,
     ), name="login"),
