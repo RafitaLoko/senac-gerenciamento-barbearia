@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>      
+
+<body>
     {% extends 'base.html' %}
 
     {% block content %}
 
     <h1>Painel Admin</h1>
-    <p>Total de clientes: {{ total_clientes }}</p>
+    <p>Total de visitantes: {{ total_visitantes }}</p>
 
     <table>
-        {% for c in clientes %}
-        <tr><td>{{ c.nome }}</td><td>{{ c.telefone }}</td></tr>
-        {% endfor %}
+        <thead>
+
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in visitantes %}
+            <tr>
+                <td>{{ v.user.get_full_name|default:v.user.username }}</td>
+                <td>{{ v.cpf }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+
+                <td colspan="2">Nenhum visitante encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
     </table>
     {% endblock %}
-    
+
 </body>
+
 </html>
