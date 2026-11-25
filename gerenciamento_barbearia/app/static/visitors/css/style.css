@@ -2,6 +2,136 @@
     box-sizing: border-box;
 }
 
+:root {
+    color-scheme: dark;
+    --gold: #d7a443;
+    --surface: #1c1c1c;
+    --text: #f5f1e8;
+}
+
 body {
     min-height: 100vh;
+    margin: 0;
+    background: #101010;
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px max(24px, calc((100% - 1100px) / 2));
+    border-bottom: 1px solid #303030;
+}
+
+.brand,
+.topbar nav a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.brand {
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.topbar nav {
+    display: flex;
+    gap: 20px;
+}
+
+.topbar nav a:hover {
+    color: var(--gold);
+}
+
+.container {
+    width: min(1100px, calc(100% - 40px));
+    margin: 48px auto;
+}
+
+.hero,
+.panel,
+.stats article {
+    border: 1px solid #34312a;
+    border-radius: 16px;
+    background: var(--surface);
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: clamp(28px, 6vw, 64px);
+    background: linear-gradient(120deg, #24211b, #171717 70%);
+}
+
+.eyebrow,
+.stats strong {
+    color: var(--gold);
+}
+
+.hero h1 {
+    margin: 12px 0;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.hero p {
+    color: #c6c1b6;
+}
+
+.hero-icon {
+    color: var(--gold);
+    font-size: clamp(3rem, 8vw, 6rem);
+}
+
+.button {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: var(--gold);
+    color: #17130b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.stats article,
+.panel {
+   padding: 24px;
+}
+
+.stats strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.8rem;
+}
+
+.panel h2 {
+    margin-top: 0;
+}
+
+footer {
+    padding: 24px;
+    color: #aaa397;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .hero {
+        align-items: flex-start;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
 }
