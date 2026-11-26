@@ -13,4 +13,5 @@ urlpatterns = [
     ), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("admin-painel/", views.admin_painel, name="admin_painel"),
+    path("agendar/", views.agendar, name="agendar"),
 ]

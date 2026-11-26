@@ -83,3 +83,7 @@ class CustomLoginView(LoginView):
         if self.request.user.groups.filter(name=ADMIN_GROUP).exists():
             return reverse("admin_painel")
         return super().get_success_url()
+
+@login_required
+def agendar(request):
+    return render(request, "dashboard.html")
