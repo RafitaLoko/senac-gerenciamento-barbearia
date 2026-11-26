@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.test import TestCase
 
-from app.groups import ADMIN_GROUP, USER_GROUP
+from app.groups import ADMIN_GROUP, ADMIN_GROUPS, USER_GROUP
 
 
 class UserTypesTests(TestCase):
@@ -86,3 +86,32 @@ class RoleLoginTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/admin-painel/")
+
+
+class AdminPanelTests(TestCase):
+    def test_admin_group_names_can_open_admin_panel(self):
+        for index, group_name in enumerate(ADMIN_GROUPS):
+            with self.subTest(group_name=group_name):
+                admin = get_user_model().objects.create_user(
+                    username=f"admin{index}",
+                    password="senhaSegura123",
+                )
+                admin.groups.add(Group.objects.get(name=group_name))
+                self.client.force_login(admin)
+
+                response = self.client.get("/admin-painel/")
+
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, 'class="visitor-table"')
+
+    def test_admin_panel_remains_restricted_to_admin_groups(self):
+        user = get_user_model().objects.create_user(
+            username="cliente",
+            password="senhaSegura123",
+        )
+        user.groups.add(Group.objects.get(name=USER_GROUP))
+        self.client.force_login(user)
+
+        response = self.client.get("/admin-painel/")
+
+        self.assertEqual(response.status_code, 403)
