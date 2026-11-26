@@ -14,12 +14,14 @@ from django.contrib.auth.views import LoginView
 
 from django.urls import reverse
 from .models import Visitor
-
-
 from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
 from app.decorators import group_required
+
+from .groups import USER_GROUP, ADMIN_GROUP
+
 from .groups import USER_GROUP, ADMIN_GROUPS
+
 
 from uuid import uuid4
 
@@ -106,6 +108,7 @@ def admin_painel(request):
     return render(request, "admin.html", {"total_visitantes": Visitor.objects.count(), "visitantes": visitantes,
 })
 
+
 class CustomLoginView(LoginView):
     def get_success_url(self):
         if self.request.user.groups.filter(name__in=ADMIN_GROUPS).exists():
@@ -115,3 +118,4 @@ class CustomLoginView(LoginView):
 @login_required
 def agendar(request):
     return render(request, "dashboard.html")
+
