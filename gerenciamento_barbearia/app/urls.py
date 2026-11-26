@@ -1,4 +1,4 @@
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LogoutView
 from django.urls import path
 
 from app.forms.authentication_form import CpfAuthenticationForm
@@ -7,7 +7,8 @@ from . import views
 urlpatterns = [
     path("", views.dashboard, name="home"),
     path("dashboard/", views.dashboard, name="dashboard_cliente"),
-    path("login/", LoginView.as_view(
+    path("agendar/", views.agendar, name="agendar"),
+    path("login/", views.RoleBasedLoginView.as_view(
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,
     ), name="login"),
