@@ -2,9 +2,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import get_user_model
+from django.contrib.auth.views import LoginView
 from django.db import transaction
 from django.contrib.auth.models import Group
+
+
 from django.contrib.auth.views import LoginView
+
 from django.urls import reverse
 from .models import Visitor
 
@@ -17,9 +21,28 @@ from .groups import USER_GROUP, ADMIN_GROUP
 from uuid import uuid4
 
 
+class RoleBasedLoginView(LoginView):
+    def get_success_url(self):
+        redirect_url = self.get_redirect_url()
+        if redirect_url:
+            return redirect_url
+
+        user = self.request.user
+        if user.is_superuser or user.groups.filter(name=ADMIN_GROUP).exists():
+            return reverse("admin_painel")
+        return reverse("dashboard_cliente")
+
+
 @login_required
 def dashboard(request):
+    if request.user.is_superuser or request.user.groups.filter(name=ADMIN_GROUP).exists():
+        return redirect("admin_painel")
     return render(request, "dashboard.html")
+
+
+@login_required
+def agendar(request):
+    return render(request, "agendar.html")
 
 
 @group_required(ADMIN_GROUP)

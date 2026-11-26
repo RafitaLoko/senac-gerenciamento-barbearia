@@ -54,3 +54,35 @@ class DashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Bem-vindo, cliente!")
         self.assertContains(response, 'href="/static/visitors/css/style.css"')
+
+
+class RoleLoginTests(TestCase):
+    def test_client_login_redirects_to_dashboard(self):
+        user = get_user_model().objects.create_user(
+            username="clientecpf",
+            password="senhaSegura123",
+        )
+        user.groups.add(Group.objects.get(name=USER_GROUP))
+
+        response = self.client.post(
+            "/login/",
+            {"username": "clientecpf", "password": "senhaSegura123"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/dashboard/")
+
+    def test_admin_login_redirects_to_admin_panel(self):
+        admin = get_user_model().objects.create_user(
+            username="admincpf",
+            password="senhaSegura123",
+        )
+        admin.groups.add(Group.objects.get(name=ADMIN_GROUP))
+
+        response = self.client.post(
+            "/login/",
+            {"username": "admincpf", "password": "senhaSegura123"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/admin-painel/")
