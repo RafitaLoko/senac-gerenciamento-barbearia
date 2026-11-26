@@ -17,6 +17,13 @@ class CreateVisitorForm(forms.ModelForm):
             'confirm_password'
         ]
         
+    def clean_cpf(self):
+        cpf = self.cleaned_data["cpf"]
+        User = get_user_model()
+        if User.objects.filter(username=cpf).exists():
+            raise ValidationError("Já existe uma conta cadastrada com esse CPF.")
+        return cpf
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")

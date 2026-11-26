@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
@@ -11,12 +12,10 @@ from .models import Visitor
 from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
 from app.decorators import group_required
-<<<<<<< HEAD
-from .groups import USER_GROUP, ADMIN_GROUP
-=======
+
 from .groups import USER_GROUP, ADMIN_GROUPS
 
->>>>>>> 7c3646fbacc3880e6f32247259c1322020a38364
+
 from uuid import uuid4
 
 
@@ -31,7 +30,7 @@ class RoleBasedLoginView(LoginView):
         user = self.request.user
         if user.is_superuser or user.groups.filter(name__in=ADMIN_GROUPS).exists():
             return reverse("admin_painel")
-        return reverse("dashboard_cliente")
+        return reverse("agendar")
 
 
 @login_required
@@ -44,6 +43,32 @@ def dashboard(request):
 @login_required
 def agendar(request):
     return render(request, "agendar.html")
+
+
+def register(request):
+    if request.method == "POST":
+        form = CreateVisitorForm(request.POST)
+
+        if form.is_valid():
+            User = get_user_model()
+
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=form.cleaned_data["cpf"],
+                    password=form.cleaned_data["password"],
+                )
+                visitor = form.save(commit=False)
+                visitor.user = user
+                visitor.save()
+                group, _ = Group.objects.get_or_create(name=USER_GROUP)
+                user.groups.add(group)
+
+            messages.success(request, "Cadastro realizado. Entre com sua conta.")
+            return redirect("login")
+    else:
+        form = CreateVisitorForm()
+
+    return render(request, "cadastro.html", {"form": form})
 
 
 @group_required(*ADMIN_GROUPS)
@@ -65,7 +90,9 @@ def create_visitor(request):
                 )
                 visitor.user = user
                 visitor.save(update_fields=['user'])
-                user.groups.add(Group.objects.get(name=USER_GROUP))
+                group, _ = Group.objects.get_or_create(name=USER_GROUP)
+                user.groups.add(group)
+
                 
             return redirect('visitors')
     else:
@@ -101,16 +128,3 @@ def admin_painel(request):
     visitantes = Visitor.objects.select_related("user").order_by("-id")[:10]
     return render(request, "admin.html", {"total_visitantes": Visitor.objects.count(), "visitantes": visitantes,
 })
-<<<<<<< HEAD
-=======
-
-class CustomLoginView(LoginView):
-    def get_success_url(self):
-        if self.request.user.groups.filter(name__in=ADMIN_GROUPS).exists():
-            return reverse("admin_painel")
-        return super().get_success_url()
-
-@login_required
-def agendar(request):
-    return render(request, "dashboard.html")
->>>>>>> 7c3646fbacc3880e6f32247259c1322020a38364
