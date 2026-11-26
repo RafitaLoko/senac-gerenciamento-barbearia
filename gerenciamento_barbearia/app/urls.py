@@ -9,7 +9,14 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard_cliente"),
 
     path("agendar/", views.agendar, name="agendar"),
+<<<<<<< HEAD
     path("login/", views.RoleBasedLoginView.as_view(
+=======
+    path("login/", views.RoleBasedLoginView.as_view()),
+
+    path("login/", views.CustomLoginView.as_view(
+
+>>>>>>> 7c3646fbacc3880e6f32247259c1322020a38364
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,
     ), name="login"),

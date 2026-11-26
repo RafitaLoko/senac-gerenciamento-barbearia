@@ -1,45 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+{% block title %}Painel administrativo | Barber King{% endblock %}
 
-<body>
-    {% extends 'base.html' %}
+{% block content %}
+<section class="admin-page">
+    <header class="admin-heading">
+        <div>
+            <span class="eyebrow">GESTÃO DA BARBEARIA</span>
+            <h1>Painel administrativo</h1>
+            <p>Acompanhe os visitantes cadastrados na barbearia.</p>
+        </div>
+        <div class="admin-total">
+            <span>Total de visitantes</span>
+            <strong>{{ total_visitantes }}</strong>
+        </div>
+    </header>
 
-    {% block content %}
-
-    <h1>Painel Admin</h1>
-    <p>Total de visitantes: {{ total_visitantes }}</p>
-
-    <table>
-        <thead>
-
-            <tr>
-                <th>Nome</th>
-                <th>CPF</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for v in visitantes %}
-            <tr>
-                <td>{{ v.user.get_full_name|default:v.user.username }}</td>
-                <td>{{ v.cpf }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-
-                <td colspan="2">Nenhum visitante encontrado.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-    </table>
-    {% endblock %}
-
-</body>
-
-</html>
+    <section class="panel visitor-panel" aria-labelledby="visitor-list-title">
+        <div class="panel-heading">
+            <h2 id="visitor-list-title">Visitantes cadastrados</h2>
+        </div>
+        <div class="table-wrap">
+            <table class="visitor-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">CPF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in visitantes %}
+                    <tr>
+                        <td>{{ v.user.get_full_name|default:v.user.username }}</td>
+                        <td>{{ v.cpf }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="empty-state" colspan="2">Nenhum visitante cadastrado ainda.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}

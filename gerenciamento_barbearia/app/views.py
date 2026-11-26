@@ -11,25 +11,32 @@ from .models import Visitor
 from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
 from app.decorators import group_required
+<<<<<<< HEAD
 from .groups import USER_GROUP, ADMIN_GROUP
+=======
+from .groups import USER_GROUP, ADMIN_GROUPS
+
+>>>>>>> 7c3646fbacc3880e6f32247259c1322020a38364
 from uuid import uuid4
 
 
 class RoleBasedLoginView(LoginView):
+    template_name = "login.html"
+
     def get_success_url(self):
         redirect_url = self.get_redirect_url()
         if redirect_url:
             return redirect_url
 
         user = self.request.user
-        if user.is_superuser or user.groups.filter(name=ADMIN_GROUP).exists():
+        if user.is_superuser or user.groups.filter(name__in=ADMIN_GROUPS).exists():
             return reverse("admin_painel")
         return reverse("dashboard_cliente")
 
 
 @login_required
 def dashboard(request):
-    if request.user.is_superuser or request.user.groups.filter(name=ADMIN_GROUP).exists():
+    if request.user.is_superuser or request.user.groups.filter(name__in=ADMIN_GROUPS).exists():
         return redirect("admin_painel")
     return render(request, "dashboard.html")
 
@@ -39,7 +46,7 @@ def agendar(request):
     return render(request, "agendar.html")
 
 
-@group_required(ADMIN_GROUP)
+@group_required(*ADMIN_GROUPS)
 def create_visitor(request):
     if request.method == 'POST':
         visitor_form = CreateVisitorForm(request.POST)
@@ -89,8 +96,21 @@ def change_password(request):
 
 
 
-@group_required(ADMIN_GROUP)
+@group_required(*ADMIN_GROUPS)
 def admin_painel(request):
     visitantes = Visitor.objects.select_related("user").order_by("-id")[:10]
     return render(request, "admin.html", {"total_visitantes": Visitor.objects.count(), "visitantes": visitantes,
 })
+<<<<<<< HEAD
+=======
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        if self.request.user.groups.filter(name__in=ADMIN_GROUPS).exists():
+            return reverse("admin_painel")
+        return super().get_success_url()
+
+@login_required
+def agendar(request):
+    return render(request, "dashboard.html")
+>>>>>>> 7c3646fbacc3880e6f32247259c1322020a38364
