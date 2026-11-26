@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Agendar
+{% endblock %}
+
+{% block content %}
+<section class="form-card">
+    <h1>Agende seu horário</h1>
+    <p>Preencha os dados para reservar seu atendimento.</p>
+    <form method="post">
+        {% csrf_token %}{{ form.as_p }}
+        <button>Confirmar horário</button>
+    </form>
+</section>
+
+{% endblock %}

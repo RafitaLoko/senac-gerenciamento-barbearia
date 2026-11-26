@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}
+Serviços
+{% endblock %}
+{% block content %}
+
+<h1>Nossos serviços</h1>
+<p>Escolha o serviço ideal para você.</p>
+<div class="cards">
+    {% for service in services %}
+    <article class="service-card">
+        <div class="service-icon">✂</div>
+        <h2>
+            {{ service.name }}
+        </h2>
+        <p>
+            {{ service.description }}
+        </p>
+            <strong>
+                R$ {{ service.price }}
+            </strong>
+            <p>
+                {{ service.duration_minutes }} minutos
+            </p>
+            <a class="button" href="{% url 'agendar' %}">Agendar</a>
+    </article>
+        
+    {% empty %}
+    <p>Nenhum serviço cadastrado.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
