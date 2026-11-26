@@ -1,6 +1,7 @@
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 
+
 class AppConfig(AppConfig):
     name = 'app'
 
@@ -10,8 +11,7 @@ class AppConfig(AppConfig):
 
 def create_user_groups(sender, **kwargs):
     from django.contrib.auth.models import Group
+    from .groups import ADMIN_GROUPS, USER_GROUP
 
-    from .groups import ADMIN_GROUP, USER_GROUP
-
-    for group_name in (ADMIN_GROUP, USER_GROUP):
+    for group_name in (*ADMIN_GROUPS, USER_GROUP):
         Group.objects.get_or_create(name=group_name)
