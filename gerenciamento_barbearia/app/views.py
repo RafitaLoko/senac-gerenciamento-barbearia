@@ -21,13 +21,11 @@ from .models import Appointment, Service, Visitor
 from app.forms.barbershop_forms import AppointmentForm, ServiceForm
 from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
-from app.decorators import group_required
+from app.decorators import admin_required, client_required, group_required
 
-<<<<<<< HEAD
-=======
 
->>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
-from .groups import USER_GROUP, ADMIN_GROUPS
+
+from .groups import USER_GROUP, ADMIN_GROUPS, is_admin_user
 
 
 from uuid import uuid4
@@ -42,14 +40,14 @@ class RoleBasedLoginView(LoginView):
             return redirect_url
 
         user = self.request.user
-        if user.is_superuser or user.groups.filter(name__in=ADMIN_GROUPS).exists():
+        if is_admin_user(user):
             return reverse("admin_painel")
-        return reverse("agendar")
+        return reverse("dashboard_cliente")
 
 
 @login_required
 def dashboard(request):
-    if request.user.is_superuser or request.user.groups.filter(name__in=ADMIN_GROUPS).exists():
+    if is_admin_user(request.user):
         return redirect("admin_painel")
     appointments = Appointment.objects.filter(client=request.user)
     upcoming = appointments.exclude(status=Appointment.STATUS_CANCELLED).filter(
@@ -61,7 +59,7 @@ def dashboard(request):
     })
 
 
-@login_required
+@client_required
 def agendar(request):
     if request.method == "POST":
         form = AppointmentForm(request.POST)
@@ -79,18 +77,18 @@ def agendar(request):
     return render(request, "agendar.html", {"form": form})
 
 
-@login_required
+@client_required
 def servicos(request):
     return render(request, "servico.html", {"services": Service.objects.filter(active=True)})
 
 
-@login_required
+@client_required
 def meus_agendamentos(request):
     appointments = Appointment.objects.filter(client=request.user)
     return render(request, "agendamento.html", {"appointments": appointments})
 
 
-@login_required
+@client_required
 def cancelar_agendamento(request, appointment_id):
     appointment = get_object_or_404(Appointment, pk=appointment_id, client=request.user)
     if request.method == "POST" and appointment.status not in (
@@ -103,7 +101,7 @@ def cancelar_agendamento(request, appointment_id):
     return redirect("meus_agendamentos")
 
 
-@login_required
+@client_required
 def perfil(request):
     if request.method == "POST":
         request.user.first_name = request.POST.get("first_name", "").strip()
@@ -114,7 +112,7 @@ def perfil(request):
     return render(request, "perfil.html")
 
 
-@login_required
+@client_required
 def confirmacao(request, appointment_id):
     appointment = get_object_or_404(Appointment, pk=appointment_id, client=request.user)
     return render(request, "confirmacao.html", {"appointment": appointment})
@@ -146,7 +144,7 @@ def register(request):
     return render(request, "cadastro.html", {"form": form})
 
 
-@group_required(*ADMIN_GROUPS)
+@admin_required
 def create_visitor(request):
     if request.method == 'POST':
         visitor_form = CreateVisitorForm(request.POST)
@@ -198,10 +196,10 @@ def change_password(request):
 
 
 
-@group_required(*ADMIN_GROUPS)
+@admin_required
 def admin_painel(request):
     visitantes = Visitor.objects.select_related("user").order_by("-id")[:10]
-<<<<<<< HEAD
+
     return render(request, "admin.html", {
         "total_visitantes": Visitor.objects.count(),
         "visitantes": visitantes,
@@ -211,23 +209,23 @@ def admin_painel(request):
     })
 
 
-=======
+
     return render(request, "admin.html", {"total_visitantes": Visitor.objects.count(), "visitantes": visitantes,
 })
->>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
+
 
 class CustomLoginView(LoginView):
     def get_success_url(self):
         redirect_url = self.get_redirect_url()
         if redirect_url:
             return redirect_url
-        if self.request.user.is_superuser or self.request.user.groups.filter(name__in=ADMIN_GROUPS).exists():
+        if is_admin_user(self.request.user):
             return reverse("admin_painel")
-        return reverse("agendar")
+        return reverse("dashboard_cliente")
 
 
-<<<<<<< HEAD
-@group_required(*ADMIN_GROUPS)
+
+@admin_required
 def admin_agendamentos(request):
     if request.method == "POST":
         appointment = get_object_or_404(Appointment, pk=request.POST.get("appointment_id"))
@@ -243,7 +241,7 @@ def admin_agendamentos(request):
     })
 
 
-@group_required(*ADMIN_GROUPS)
+@admin_required
 def admin_clientes(request):
     clients = get_user_model().objects.filter(groups__name=USER_GROUP).annotate(
         total_appointments=Count("appointments")
@@ -251,7 +249,7 @@ def admin_clientes(request):
     return render(request, "cliente.html", {"clients": clients})
 
 
-@group_required(*ADMIN_GROUPS)
+@admin_required
 def admin_servicos(request):
     if request.method == "POST":
         form = ServiceForm(request.POST)
@@ -267,7 +265,7 @@ def admin_servicos(request):
     })
 
 
-@group_required(*ADMIN_GROUPS)
+@admin_required
 def admin_editar_servico(request, service_id):
     service = get_object_or_404(Service, pk=service_id)
     if request.method == "POST":
@@ -285,7 +283,7 @@ def admin_editar_servico(request, service_id):
     })
 
 
-@group_required(*ADMIN_GROUPS)
+@admin_required
 def admin_excluir_servico(request, service_id):
     service = get_object_or_404(Service, pk=service_id)
     if request.method == "POST":
@@ -297,7 +295,7 @@ def admin_excluir_servico(request, service_id):
     return redirect("admin_servicos")
 
 
-@group_required(*ADMIN_GROUPS)
+@admin_required
 def admin_relatorios(request):
     by_status = Appointment.objects.values("status").annotate(total=Count("id")).order_by("status")
     revenue = Appointment.objects.filter(status=Appointment.STATUS_COMPLETED).aggregate(
@@ -308,6 +306,5 @@ def admin_relatorios(request):
         "by_status": by_status,
         "total_agendamentos": Appointment.objects.count(),
     })
-=======
->>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
+
 

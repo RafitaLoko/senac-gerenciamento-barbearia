@@ -42,6 +42,28 @@ class DashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<h1>Entrar</h1>")
         self.assertContains(response, 'href="/static/visitors/css/style.css"')
+        self.assertContains(response, 'href="/cadastro/">Cadastrar-se</a>')
+        self.assert_guest_client_navigation(response)
+
+    def test_registration_page_shows_public_header_navigation(self):
+        response = self.client.get("/cadastro/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="/login/">Entrar</a>')
+        self.assertContains(response, 'href="/cadastro/">Cadastrar-se</a>')
+        self.assert_guest_client_navigation(response)
+
+    def assert_guest_client_navigation(self, response):
+        for href, label in (
+            ("/dashboard/", "Início"),
+            ("/servicos/", "Serviços"),
+            ("/agendar/", "Agendar"),
+            ("/meus-agendamentos/", "Meus Agendamentos"),
+            ("/perfil/", "Perfil"),
+            ("/logout/", "Sair"),
+        ):
+            with self.subTest(label=label):
+                self.assertContains(response, f'href="{href}">{label}')
 
     def test_authenticated_user_can_open_dashboard(self):
         user = get_user_model().objects.create_user(
@@ -70,7 +92,7 @@ class DashboardTests(TestCase):
 
 
 class RoleLoginTests(TestCase):
-    def test_client_login_redirects_to_booking(self):
+    def test_client_login_redirects_to_dashboard(self):
         user = get_user_model().objects.create_user(
             username="clientecpf",
             password="senhaSegura123",
@@ -83,7 +105,7 @@ class RoleLoginTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/agendar/")
+        self.assertEqual(response.url, "/dashboard/")
 
     def test_admin_login_redirects_to_admin_panel(self):
         admin = get_user_model().objects.create_user(
@@ -125,7 +147,7 @@ class RegistrationTests(TestCase):
         )
         self.assertRedirects(
             login_response,
-            "/agendar/",
+            "/dashboard/",
             fetch_redirect_response=False,
         )
 
