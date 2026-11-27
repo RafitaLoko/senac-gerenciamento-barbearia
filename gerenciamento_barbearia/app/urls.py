@@ -5,19 +5,39 @@ from app.forms.authentication_form import CpfAuthenticationForm
 from . import views
 
 urlpatterns = [
+<<<<<<< HEAD
+=======
+
+>>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
     path("", views.RoleBasedLoginView.as_view(
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,
     ), name="home"),
     path("cadastro/", views.register, name="cadastro"),
+<<<<<<< HEAD
+=======
+
+    path("", RedirectView.as_view(pattern_name="login"), name="root"),
+    path("dashboard/", views.dashboard, name="home"),
+
+>>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
     path("dashboard/", views.dashboard, name="dashboard_cliente"),
     path("agendar/", views.agendar, name="agendar"),
+<<<<<<< HEAD
     path("servicos/", views.servicos, name="servicos"),
     path("meus-agendamentos/", views.meus_agendamentos, name="meus_agendamentos"),
     path("meus-agendamentos/<int:appointment_id>/cancelar/", views.cancelar_agendamento, name="cancelar_agendamento"),
     path("perfil/", views.perfil, name="perfil"),
     path("confirmacao/<int:appointment_id>/", views.confirmacao, name="confirmacao"),
     path("login/", views.CustomLoginView.as_view(
+=======
+
+
+    path("login/", views.CustomLoginView.as_view(
+
+
+
+>>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,
     ), name="login"),

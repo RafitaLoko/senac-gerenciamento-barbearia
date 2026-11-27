@@ -18,10 +18,14 @@
   {% if user.is_authenticated %}
   <nav>
     <a href="{% url 'dashboard_cliente' %}">Início</a>
+<<<<<<< HEAD
     <a href="{% url 'servicos' %}">Serviços</a>
     <a href="{% url 'meus_agendamentos' %}">Agendamentos</a>
     <a href="{% url 'perfil' %}">Perfil</a>
     <a href="{% url 'logout' %}">Sair</a>
+=======
+    <a href="{% url 'login' %}">Sair</a>
+>>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
     {% if user.is_superuser or user|has_group:"Administrador" %}
     <a href="{% url 'admin_painel' %}">Admin</a>
     {% endif %}
