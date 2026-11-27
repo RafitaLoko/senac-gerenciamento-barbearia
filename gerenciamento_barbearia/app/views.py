@@ -23,10 +23,10 @@ from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
 from app.decorators import group_required
 
-<<<<<<< HEAD
-=======
 
->>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
+
+
+
 from .groups import USER_GROUP, ADMIN_GROUPS
 
 
@@ -201,7 +201,7 @@ def change_password(request):
 @group_required(*ADMIN_GROUPS)
 def admin_painel(request):
     visitantes = Visitor.objects.select_related("user").order_by("-id")[:10]
-<<<<<<< HEAD
+
     return render(request, "admin.html", {
         "total_visitantes": Visitor.objects.count(),
         "visitantes": visitantes,
@@ -211,10 +211,10 @@ def admin_painel(request):
     })
 
 
-=======
+
     return render(request, "admin.html", {"total_visitantes": Visitor.objects.count(), "visitantes": visitantes,
 })
->>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
+
 
 class CustomLoginView(LoginView):
     def get_success_url(self):
@@ -226,7 +226,7 @@ class CustomLoginView(LoginView):
         return reverse("agendar")
 
 
-<<<<<<< HEAD
+
 @group_required(*ADMIN_GROUPS)
 def admin_agendamentos(request):
     if request.method == "POST":
@@ -308,6 +308,4 @@ def admin_relatorios(request):
         "by_status": by_status,
         "total_agendamentos": Appointment.objects.count(),
     })
-=======
->>>>>>> e402640b78abbcf26ec5ed86a34d679b9809c0b4
 
