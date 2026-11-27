@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Serviços | Administração{% endblock %}
+{% block content %}
+<h1>{% if editing %}Editar serviço{% else %}Cadastrar serviço{% endif %}</h1>
+<section class="form-card panel">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="button" type="submit">{% if editing %}Salvar alterações{% else %}Cadastrar{% endif %}</button>
+  </form>
+</section>
+
+<section class="panel table-wrap">
+  <h2>Serviços cadastrados</h2>
+  <table class="visitor-table">
+    <thead><tr><th>Nome</th><th>Preço</th><th>Duração</th><th>Status</th><th>Ações</th></tr></thead>
+    <tbody>
+    {% for service in services %}
+      <tr>
+        <td>{{ service.name }}</td>
+        <td>R$ {{ service.price }}</td>
+        <td>{{ service.duration_minutes }} min</td>
+        <td>{% if service.active %}Ativo{% else %}Inativo{% endif %}</td>
+        <td>
+          <a class="button small" href="{% url 'admin_editar_servico' service.pk %}">Editar</a>
+          <form method="post" action="{% url 'admin_excluir_servico' service.pk %}" class="inline-form">
+            {% csrf_token %}
+            <button class="danger small" type="submit">Excluir</button>
+          </form>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5" class="empty-state">Nenhum serviço cadastrado.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

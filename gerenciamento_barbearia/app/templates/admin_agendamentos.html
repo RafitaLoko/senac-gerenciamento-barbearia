@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Agendamentos | Administração{% endblock %}
+{% block content %}
+<h1>Gerenciar agendamentos</h1>
+<div class="panel table-wrap">
+  <table class="visitor-table">
+    <thead><tr><th>Cliente</th><th>Serviço</th><th>Data</th><th>Horário</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for appointment in appointments %}
+      <tr>
+        <td>{{ appointment.client.username }}</td>
+        <td>{{ appointment.service.name }}</td>
+        <td>{{ appointment.date|date:"d/m/Y" }}</td>
+        <td>{{ appointment.time|time:"H:i" }}</td>
+        <td>
+          <form method="post" class="inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="appointment_id" value="{{ appointment.pk }}">
+            <select name="status">
+              {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if appointment.status == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="button small">Salvar</button>
+          </form>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5" class="empty-state">Nenhum agendamento.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

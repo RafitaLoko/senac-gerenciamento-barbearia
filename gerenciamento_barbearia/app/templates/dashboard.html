@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
     {% block title %}Início | Barber King
     {% endblock %}
     {% block content %}
@@ -38,6 +30,7 @@
          às {{ upcoming.time|time:"H:i" }}</p>
          <p>Status: {{ upcoming.status }}</p>
 </section>
-        {% else %}<p>Você ainda não possui agendamentos futuros.</p>{% endif %}{% endblock %}
-</body>
-</html>
+{% else %}
+<p>Você ainda não possui agendamentos futuros.</p>
+{% endif %}
+{% endblock %}

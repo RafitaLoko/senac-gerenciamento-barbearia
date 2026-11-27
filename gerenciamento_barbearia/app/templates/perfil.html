@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+Meu perfil
+{% endblock %}
+{% block content %}
+<section class="form-card">
+    <h1>Meu perfil</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label>Nome</label>
+        <input name="first_name"
+            value="{{ user.first_name }}">
+            <label>E-mail</label>
+            <input type="email" name="email"
+            value="{{ user.email }}">
+            <label>Usuário</label>
+            <input value="{{ user.username }}" disabled>
+            <button>Salvar
+            alterações</button>
+        </form>
+</section>
+
+{% endblock %}
