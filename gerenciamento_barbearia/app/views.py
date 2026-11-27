@@ -19,11 +19,7 @@ from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
 from app.decorators import group_required
 
-<<<<<<< HEAD
-=======
-from .groups import USER_GROUP, ADMIN_GROUP
 
->>>>>>> 833d416067b6958abc6a2f8ef51015653ab540ce
 from .groups import USER_GROUP, ADMIN_GROUPS
 
 
@@ -139,9 +135,6 @@ def admin_painel(request):
     visitantes = Visitor.objects.select_related("user").order_by("-id")[:10]
     return render(request, "admin.html", {"total_visitantes": Visitor.objects.count(), "visitantes": visitantes,
 })
-<<<<<<< HEAD
-=======
-
 
 class CustomLoginView(LoginView):
     def get_success_url(self):
@@ -153,4 +146,4 @@ class CustomLoginView(LoginView):
 def agendar(request):
     return render(request, "dashboard.html")
 
->>>>>>> 833d416067b6958abc6a2f8ef51015653ab540ce
+
