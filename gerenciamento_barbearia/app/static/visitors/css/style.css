@@ -190,6 +190,15 @@ body {
     text-decoration: none;
 }
 
+.primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.primary:hover {
+    background: #1d4ed8;
+}
+
 .stats {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -273,9 +282,18 @@ button,
   cursor: pointer;
 }
 
+.small.primary {
+  background: #2563eb;
+  color: #fff;
+}
+
 .danger {
   background: #b94a43;
   color: white;
+}
+
+.danger:hover {
+  background: #963b35;
 }
 
 .admin-nav {

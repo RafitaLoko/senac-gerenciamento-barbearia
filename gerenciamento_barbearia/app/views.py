@@ -21,6 +21,7 @@ from .models import Appointment, Service, Visitor
 from app.forms.barbershop_forms import AppointmentForm, ServiceForm
 from app.forms.change_password_form import ChangePasswordForm
 from app.forms.create_visitor_form import CreateVisitorForm
+from app.forms.user_forms import UserProfileForm
 from app.decorators import admin_required, client_required, group_required
 
 
@@ -66,12 +67,9 @@ def agendar(request):
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.client = request.user
-            if appointment.date < timezone.localdate():
-                form.add_error("date", "Selecione uma data futura.")
-            else:
-                appointment.save()
-                messages.success(request, "Agendamento confirmado!")
-                return redirect("confirmacao", appointment_id=appointment.pk)
+            appointment.save()
+            messages.success(request, "Agendamento confirmado!")
+            return redirect("confirmacao", appointment_id=appointment.pk)
     else:
         form = AppointmentForm()
     return render(request, "agendar.html", {"form": form})
@@ -104,12 +102,14 @@ def cancelar_agendamento(request, appointment_id):
 @client_required
 def perfil(request):
     if request.method == "POST":
-        request.user.first_name = request.POST.get("first_name", "").strip()
-        request.user.email = request.POST.get("email", "").strip()
-        request.user.save(update_fields=["first_name", "email"])
-        messages.success(request, "Perfil atualizado.")
-        return redirect("perfil")
-    return render(request, "perfil.html")
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil atualizado.")
+            return redirect("perfil")
+    else:
+        form = UserProfileForm(instance=request.user)
+    return render(request, "perfil.html", {"form": form})
 
 
 @client_required
@@ -128,6 +128,7 @@ def register(request):
             with transaction.atomic():
                 user = User.objects.create_user(
                     username=form.cleaned_data["cpf"],
+                    email=form.cleaned_data["email"],
                     password=form.cleaned_data["password"],
                 )
                 visitor = form.save(commit=False)
@@ -159,6 +160,7 @@ def create_visitor(request):
 
                 user = User.objects.create_user(
                     username=visitor.cpf,
+                    email=visitor_form.cleaned_data["email"],
                     password=visitor_form.cleaned_data['password'],
                 )
                 visitor.user = user

@@ -6,7 +6,7 @@
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="button" type="submit">{% if editing %}Salvar alterações{% else %}Cadastrar{% endif %}</button>
+    <button class="button primary" type="submit">{% if editing %}Salvar alterações{% else %}Cadastrar{% endif %}</button>
   </form>
 </section>
 
@@ -22,7 +22,7 @@
         <td>{{ service.duration_minutes }} min</td>
         <td>{% if service.active %}Ativo{% else %}Inativo{% endif %}</td>
         <td>
-          <a class="button small" href="{% url 'admin_editar_servico' service.pk %}">Editar</a>
+          <a class="button primary small" href="{% url 'admin_editar_servico' service.pk %}">Editar</a>
           <form method="post" action="{% url 'admin_excluir_servico' service.pk %}" class="inline-form">
             {% csrf_token %}
             <button class="danger small" type="submit">Excluir</button>
