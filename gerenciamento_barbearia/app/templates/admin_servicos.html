@@ -23,7 +23,7 @@
         <td>{% if service.active %}Ativo{% else %}Inativo{% endif %}</td>
         <td>
           <a class="button primary small" href="{% url 'admin_editar_servico' service.pk %}">Editar</a>
-          <form method="post" action="{% url 'admin_excluir_servico' service.pk %}" class="inline-form">
+          <form method="post" action="{% url 'admin_excluir_servico' service.pk %}" class="inline-form" onsubmit="return confirm('Tem certeza de que deseja excluir permanentemente este serviço? Esta ação não pode ser desfeita.');">
             {% csrf_token %}
             <button class="danger small" type="submit">Excluir</button>
           </form>
