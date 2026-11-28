@@ -4,14 +4,15 @@ from django.urls import path
 from app.forms.authentication_form import CpfAuthenticationForm
 from . import views
 
+
 from django.views.generic import RedirectView
  
 
+
+
+
+
 urlpatterns = [
-
-
-
-
     # path("", views.RoleBasedLoginView.as_view(
     #     template_name="login.html",
     #     authentication_form=CpfAuthenticationForm,
@@ -23,6 +24,15 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="home"),
 
 
+
+
+    path("", views.RoleBasedLoginView.as_view(
+        template_name="login.html",
+        authentication_form=CpfAuthenticationForm,
+    ), name="home"),
+    path("cadastro/", views.register, name="cadastro"),
+
+
     path("dashboard/", views.dashboard, name="dashboard_cliente"),
     path("agendar/", views.agendar, name="agendar"),
 
@@ -31,11 +41,11 @@ urlpatterns = [
     path("meus-agendamentos/<int:appointment_id>/cancelar/", views.cancelar_agendamento, name="cancelar_agendamento"),
     path("perfil/", views.perfil, name="perfil"),
     path("confirmacao/<int:appointment_id>/", views.confirmacao, name="confirmacao"),
-   
-    
-    
-    path("login/", views.CustomLoginView.as_view(
 
+   
+
+
+    path("login/", views.CustomLoginView.as_view(
 
         template_name="login.html",
         authentication_form=CpfAuthenticationForm,
@@ -48,4 +58,5 @@ urlpatterns = [
     path("admin/servicos/<int:service_id>/editar/", views.admin_editar_servico, name="admin_editar_servico"),
     path("admin/servicos/<int:service_id>/excluir/", views.admin_excluir_servico, name="admin_excluir_servico"),
     path("admin/relatorios/", views.admin_relatorios, name="admin_relatorios"),
+
 ]

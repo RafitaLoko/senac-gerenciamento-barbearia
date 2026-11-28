@@ -14,9 +14,10 @@
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="{% url 'home' %}">♛ BARBER KING</a>
+  <a class="brand" href="{% if user.is_authenticated %}{% if user.is_superuser or user.is_staff or user|has_group:'Administrador' or user|has_group:'admin' %}{% url 'admin_painel' %}{% else %}{% url 'dashboard_cliente' %}{% endif %}{% else %}{% url 'home' %}{% endif %}">♛ BARBER KING</a>
   {% if user.is_authenticated %}
   <nav>
+
     <a href="{% url 'dashboard_cliente' %}">Início</a>
 
     <a href="{% url 'servicos' %}">Serviços</a>
@@ -28,9 +29,34 @@
     {% if user.is_superuser or user|has_group:"Administrador" %}
     <a href="{% url 'admin_painel' %}">Admin</a>
     {% endif %}
+
+    {% if user.is_superuser or user.is_staff or user|has_group:"Administrador" or user|has_group:"admin" %}
+      <a href="{% url 'admin_painel' %}">Dashboard</a>
+      <a href="{% url 'admin_agendamentos' %}">Agendamentos</a>
+      <a href="{% url 'admin_clientes' %}">Clientes</a>
+      <a href="{% url 'admin_servicos' %}">Serviços</a>
+      <a href="{% url 'admin_relatorios' %}">Relatórios</a>
+    {% else %}
+      <a href="{% url 'dashboard_cliente' %}">Início</a>
+      <a href="{% url 'servicos' %}">Serviços</a>
+      <a href="{% url 'agendar' %}">Agendar</a>
+      <a href="{% url 'meus_agendamentos' %}">Meus Agendamentos</a>
+      <a href="{% url 'perfil' %}">Perfil</a>
+
+    {% endif %}
+    <a href="{% url 'login' %}">Sair ↗</a>
   </nav>
   {% else %}
-  <nav><a href="{% url 'login' %}">Entrar</a></nav>
+  <nav>
+    <a href="{% url 'dashboard_cliente' %}">Início</a>
+    <a href="{% url 'servicos' %}">Serviços</a>
+    <a href="{% url 'agendar' %}">Agendar</a>
+    <a href="{% url 'meus_agendamentos' %}">Meus Agendamentos</a>
+    <a href="{% url 'perfil' %}">Perfil</a>
+    <a href="{% url 'logout' %}">Sair ↗</a>
+    <a href="{% url 'login' %}">Entrar</a>
+    <a href="{% url 'cadastro' %}">Cadastrar-se</a>
+  </nav>
   {% endif %}
 </header>
 <main class="container">

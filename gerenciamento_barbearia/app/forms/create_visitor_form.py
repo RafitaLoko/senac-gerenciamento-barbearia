@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
@@ -5,24 +7,31 @@ from django.core.exceptions import ValidationError
 
 from ..models import Visitor
 
+
 class CreateVisitorForm(forms.ModelForm):
+    email = forms.EmailField(label="E-mail")
     password = forms.CharField(strip=False)
     confirm_password = forms.CharField(strip=False)
-    
+
     class Meta:
         model = Visitor
-        fields = [
-            'cpf',
-            'password',
-            'confirm_password'
-        ]
-        
+        fields = ["cpf"]
+
     def clean_cpf(self):
-        cpf = self.cleaned_data["cpf"]
+        cpf = self.cleaned_data["cpf"].strip()
+        if not re.fullmatch(r"[0-9]{11}", cpf):
+            raise ValidationError("Informe um CPF com 11 números.")
+
         User = get_user_model()
         if User.objects.filter(username=cpf).exists():
             raise ValidationError("Já existe uma conta cadastrada com esse CPF.")
         return cpf
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip()
+        if get_user_model().objects.filter(email__iexact=email).exists():
+            raise ValidationError("Já existe uma conta cadastrada com esse e-mail.")
+        return email
 
     def clean(self):
         cleaned_data = super().clean()
@@ -36,8 +45,7 @@ class CreateVisitorForm(forms.ModelForm):
                 User = get_user_model()
                 candidate_user = User(
                     username=cleaned_data.get("cpf"),
-                    first_name=cleaned_data.get("first_name"),
-                    last_name=cleaned_data.get("last_name"),
+                    email=cleaned_data.get("email"),
                 )
 
                 try:
