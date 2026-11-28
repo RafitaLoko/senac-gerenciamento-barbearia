@@ -288,6 +288,10 @@ class ServiceCrudTests(TestCase):
 
         read_response = self.client.get("/admin/servicos/")
         self.assertContains(read_response, "Corte")
+        self.assertContains(
+            read_response,
+            "Tem certeza de que deseja excluir permanentemente este serviço?",
+        )
 
         update_response = self.client.post(
             f"/admin/servicos/{service.pk}/editar/",
